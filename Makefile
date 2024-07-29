@@ -1,6 +1,6 @@
 C_SOURCES = $(wildcard src/*.c src/drivers/*.c src/cpu/*.c)
 HEADERS = $(wildcard src/*.h src/drivers/*.h src/cpu/*.h)
-OBJ = ${C_SOURCES:.c=.o}
+OBJ = ${C_SOURCES:.c=.o src/cpu/interrupt.o}
 
 
 CFLAGS = -g
