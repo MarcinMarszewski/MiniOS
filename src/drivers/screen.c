@@ -47,7 +47,3 @@ void write_at_cursor(char* c){
 	get_cursor(&x, &y);
 	write_at(c, x, y);
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 0f27a05310ba62d295f38c084454639a0faa8e92
