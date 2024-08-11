@@ -19,6 +19,24 @@ extern void interrupt12();
 extern void interrupt13();
 extern void interrupt14();
 extern void interrupt15();
+extern void interrupt16();
+extern void interrupt17();
+extern void interrupt18();
+extern void interrupt19();
+extern void interrupt20();
+extern void interrupt21();
+extern void interrupt22();
+extern void interrupt23();
+extern void interrupt24();
+extern void interrupt25();
+extern void interrupt26();
+extern void interrupt27();
+extern void interrupt28();
+extern void interrupt29();
+extern void interrupt30();
+extern void interrupt31();
+extern void interrupt32();
+extern void interrupt33();
 
 typedef struct {
     unsigned short low_offset; /* Lower 16 bits of handler function address */
