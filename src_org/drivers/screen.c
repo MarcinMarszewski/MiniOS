@@ -1,7 +1,6 @@
 #include "screen.h"
 
 char __text_color = 0x0f;
-char __cursor_move = 1;
 
 void write_char_at(char c, int x, int y){
 	char* vmem = VMEM + 2*(y*SCREEN_WIDTH + x);
@@ -10,9 +9,6 @@ void write_char_at(char c, int x, int y){
 	}
 	vmem[0] = c;
 	vmem[1] = __text_color;
-
-	if(__cursor_move)
-		set_cursor(x+1, y);
 }
 
 void write_at(char* c, int x, int y){
@@ -47,7 +43,3 @@ void write_at_cursor(char* c){
 	get_cursor(&x, &y);
 	write_at(c, x, y);
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 0f27a05310ba62d295f38c084454639a0faa8e92

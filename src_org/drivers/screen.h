@@ -11,7 +11,6 @@
 #define WHITE_ON_BLACK 0x0f
 
 extern char __text_color;
-extern char __cursor_move;
 
 void write_at(char* c, int x, int y);
 void write_char_at(char c, int x, int y);
