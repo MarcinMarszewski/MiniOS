@@ -1,5 +1,7 @@
 #include "drivers/screen.h"
 #include "drivers/keyboard.h"
+#include "lib/memory.h"
+#include "lib/string.h"
 
 void scancode_w(){
 	int x, y;
@@ -49,6 +51,29 @@ void main(){
 	register_interrupt_handler(33, keyboard_irq);
 
 	__cursor_move = 0;
+
+	char* str1 = number_to_string(123);
+	char* str2 = number_to_string(456);
+	char* str3 = number_to_string(789);
+	char* str4 = number_to_string(789);
+	char* str5 = number_to_string(789);
+
+	write_at(str1, 0, 0);
+	write_at(str2, 0, 1);
+	write_at(str3, 0, 2);
+
+	memory_free(str1);
+	memory_free(str2);
+	memory_free(str3);
+	memory_free(str4);
+	memory_free(str5);
+
+	char* str6 = number_to_string(123);
+
+	write_at(number_to_string(str4),0,4);
+	write_at(number_to_string(str5),0,5);
+	write_at(number_to_string(str6),0,6);
+
 
 	asm volatile("sti");
 }

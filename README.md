@@ -1,6 +1,10 @@
 # MiniOS
  Minimal bootable binary for x86 architecture
 
+# Todo:
+- Add ability to load more memory (currently 31 segments)
+- Accessing hard drive
+
 # Planned to include
 - basic tree style file system handling
 - minimalistic shell with basic commands

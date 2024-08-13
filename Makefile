@@ -1,5 +1,5 @@
-C_SOURCES = $(wildcard src/*.c src/drivers/*.c src/cpu/*.c)
-HEADERS = $(wildcard src/*.h src/drivers/*.h src/cpu/*.h)
+C_SOURCES = $(wildcard src/*.c src/drivers/*.c src/cpu/*.c src/lib/*.c)
+HEADERS = $(wildcard src/*.h src/drivers/*.h src/cpu/*.h src/lib/*.h)
 OBJ = ${C_SOURCES:.c=.o src/cpu/interrupt.o}
 
 
