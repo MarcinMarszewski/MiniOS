@@ -1,8 +1,8 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 
-#define DYNAMIC_MEMORY_SIZE 512
-#define MAX_ALLOCATIONS 32
+#define DYNAMIC_MEMORY_SIZE 1024*1024*8
+#define MAX_ALLOCATIONS 1024*8
 #define NULL 0
 
 typedef unsigned int size_t;

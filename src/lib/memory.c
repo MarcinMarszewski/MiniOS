@@ -21,6 +21,17 @@ void* memory_allocate(size_t size){
 		return NULL;
 	}
 
+	if((char*)_allocations[0].address - _dynamic_memory >= size){
+		memory_allocation new_allocation = {_dynamic_memory, size};
+		int i;
+		for(i=total_allocations;i>0;i--){
+			_allocations[i] = _allocations[i-1];
+		}
+		_allocations[0] = new_allocation;
+		total_allocations++;
+		return new_allocation.address;
+	}
+
 	int i;
 	for(i=0;i<total_allocations-1;i++){
 		if(_allocations[i+1].address - _allocations[i].address - _allocations[i].size >=size){

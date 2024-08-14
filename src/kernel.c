@@ -52,11 +52,17 @@ void main(){
 
 	__cursor_move = 0;
 
+	char* loads_of_memory = memory_allocate(1024*1024*4);
+
+
+
 	char* str1 = number_to_string(123);
 	char* str2 = number_to_string(456);
 	char* str3 = number_to_string(789);
 	char* str4 = number_to_string(789);
 	char* str5 = number_to_string(789);
+
+	write_at(number_to_string(loads_of_memory),0,3);
 
 	write_at(str1, 0, 0);
 	write_at(str2, 0, 1);
@@ -73,6 +79,14 @@ void main(){
 	write_at(number_to_string(str4),0,4);
 	write_at(number_to_string(str5),0,5);
 	write_at(number_to_string(str6),0,6);
+
+	char* loads_of_memory2 = memory_allocate(1024*32);
+
+	memory_free(loads_of_memory);
+	memory_free(loads_of_memory2);
+	memory_free(str6);
+
+	write_at(number_to_string(memory_allocate(4)),0,0);
 
 
 	asm volatile("sti");
