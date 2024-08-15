@@ -28,7 +28,8 @@ void ata_identify(unsigned short io) {
     ata_wait_drq(io);
 
     unsigned short buffer[256];
-    for (int i = 0; i < 256; i++) {
+    int i;
+    for (i = 0; i < 256; i++) {
         buffer[i] = port_word_in(io + ATA_REG_DATA);
     }
 
@@ -47,7 +48,8 @@ void ata_read_sector(unsigned short io, unsigned int lba, unsigned char *buffer)
     ata_wait_bsy(io);
     ata_wait_drq(io);
 
-    for (int i = 0; i < 256; i++) {
+    int i;
+    for (i = 0; i < 256; i++) {
         ((unsigned short *)buffer)[i] = port_word_in(io + ATA_REG_DATA);
     }
 }
@@ -63,7 +65,8 @@ void ata_write_sector(unsigned short io, unsigned int lba, unsigned char *buffer
 
     ata_wait_bsy(io);
 
-    for (int i = 0; i < 256; i++) {
+    int i;
+    for (i = 0; i < 256; i++) {
         port_word_out(io + ATA_REG_DATA, ((unsigned short *)buffer)[i]);
     }
 

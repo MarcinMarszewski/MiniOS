@@ -2,6 +2,7 @@
 #include "drivers/keyboard.h"
 #include "lib/memory.h"
 #include "lib/string.h"
+#include "drivers/harddrive.h"
 
 void scancode_w(){
 	int x, y;
@@ -88,6 +89,13 @@ void main(){
 
 	write_at(number_to_string(memory_allocate(4)),0,0);
 
+
+	char buffer[512] = "Hello World!";
+	ata_write_sector(ATA_PRIMARY_IO, 0, buffer);
+
+	char buffer2[512] = {0};
+	ata_read_sector(ATA_PRIMARY_IO, 0, buffer2);
+	write_at(buffer2, 0, 0);
 
 	asm volatile("sti");
 }
