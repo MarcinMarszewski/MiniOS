@@ -2,13 +2,15 @@
 #include "memory.h"
 
 //zero terminated string
-//To optimize i need to implement memory shorten function
 char* number_to_string(int number){
 	char* str = (char*)memory_allocate(12);
 
 	char i=0, is_negative=number<0?1:0;
+	if(is_negative)
+		number = -number;
+		
 	do{
-		str[i++] = number%10 + '0';
+		str[i++] = (number%10) + '0';
 		number/=10;
 	}while(number!=0);
 	if(is_negative)

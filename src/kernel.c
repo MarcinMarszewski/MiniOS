@@ -3,6 +3,7 @@
 #include "lib/memory.h"
 #include "lib/string.h"
 #include "drivers/harddrive.h"
+#include "lib/filesystem.h"
 
 void scancode_w(){
 	int x, y;
@@ -41,8 +42,7 @@ void scancode_e(){
 void main(){
 	isr_install();
 	
-	
-	define_key_interrupt(0x11, scancode_w);
+	/* define_key_interrupt(0x11, scancode_w);
 	define_key_interrupt(0x1f, scancode_s);
 	define_key_interrupt(0x1e, scancode_a);
 	define_key_interrupt(0x20, scancode_d);
@@ -51,51 +51,26 @@ void main(){
 
 	register_interrupt_handler(33, keyboard_irq);
 
-	__cursor_move = 0;
-
-	char* loads_of_memory = memory_allocate(1024*1024*4);
+	__cursor_move = 0; */
 
 
+	filesystem_init();
 
-	char* str1 = number_to_string(123);
-	char* str2 = number_to_string(456);
-	char* str3 = number_to_string(789);
-	char* str4 = number_to_string(789);
-	char* str5 = number_to_string(789);
+	int i;
+	add_file_to_directory("file1", 'F', 0);
 
-	write_at(number_to_string(loads_of_memory),0,3);
+	unsigned short file = find_file_in_dircetory("file1", GLOBALDIRCETORYADDRESS);
+	
+	file_write(file, "hello world", 11, 0, 0);
+	file_write(file, "hello world", 11, 0, 11);
+	file_write(file, "hello world", 11, 1, 0);
+	write_at_cursor(file_read(file, 0));
+	write_at_cursor(file_read(file, 1));
+	/* char buffer[512] = "hello world";
 
-	write_at(str1, 0, 0);
-	write_at(str2, 0, 1);
-	write_at(str3, 0, 2);
+	char* buf = load_buffer(0);
+	write_at_cursor(number_to_string((unsigned char)buf[0])); */
 
-	memory_free(str1);
-	memory_free(str2);
-	memory_free(str3);
-	memory_free(str4);
-	memory_free(str5);
-
-	char* str6 = number_to_string(123);
-
-	write_at(number_to_string(str4),0,4);
-	write_at(number_to_string(str5),0,5);
-	write_at(number_to_string(str6),0,6);
-
-	char* loads_of_memory2 = memory_allocate(1024*32);
-
-	memory_free(loads_of_memory);
-	memory_free(loads_of_memory2);
-	memory_free(str6);
-
-	write_at(number_to_string(memory_allocate(4)),0,0);
-
-
-	char buffer[512] = "Hello World!";
-	ata_write_sector(ATA_PRIMARY_IO, 0, buffer);
-
-	char buffer2[512] = {0};
-	ata_read_sector(ATA_PRIMARY_IO, 0, buffer2);
-	write_at(buffer2, 0, 0);
 
 	asm volatile("sti");
 }
