@@ -4,8 +4,9 @@
 #include "../drivers/screen.h"
 
 unsigned char buffer[512*ALLOCATIONUNITSIZE] = {0};
-unsigned char file_allocation_buffer[512];
-unsigned char small_buffer[512];
+unsigned char file_allocation_buffer[512] = {0};
+const unsigned char empty_buffer[512] = {0}; //buffer to be always set to 0
+unsigned char small_buffer[512] = {0};
 
 void filesystem_init(){
 	buffer[0] = 'D';
@@ -36,18 +37,25 @@ unsigned short allocate_unit(unsigned char filetype, unsigned char flags){
 	for(i=GLOBALDIRCETORYADDRESS+ALLOCATIONUNITSIZE;i<MAXDIRECTORYADDRESS;i+=ALLOCATIONUNITSIZE){
 		ata_read_sector(ATA_PRIMARY_IO, i, file_allocation_buffer);
 		if(file_allocation_buffer[0] == 0){
+			ata_write_sector(ATA_PRIMARY_IO, i, empty_buffer);
+			ata_read_sector(ATA_PRIMARY_IO, i, file_allocation_buffer);
 			file_allocation_buffer[0] = filetype;
 			file_allocation_buffer[1] = flags; //[..,isLast,isFirst]
 			file_allocation_buffer[2] = 0;
 			file_allocation_buffer[3] = 0; //short - next allocation
 			ata_write_sector(ATA_PRIMARY_IO, i, file_allocation_buffer);
+			
+			int j;
+			for(j=1;j<ALLOCATIONUNITSIZE;j++){
+				ata_write_sector(ATA_PRIMARY_IO, j+i, empty_buffer);
+			}
 			return i;
 		}
 	}
 	return 0;
 }
 
-unsigned short find_file_in_dircetory(char* filename, unsigned short searchDir){
+unsigned short find_file_in_dircetory(unsigned char* filename, unsigned short searchDir){
 	searchDir = searchDir<GLOBALDIRCETORYADDRESS ? GLOBALDIRCETORYADDRESS : searchDir;
 
 	load_buffer(searchDir);
@@ -123,8 +131,40 @@ void add_file_to_directory(char* filename, unsigned char filetype, unsigned shor
 	}
 }
 
+//return deleted file location
+unsigned short delete_file_from_directory(char* filename, unsigned short searchDir){
+		searchDir = searchDir<GLOBALDIRCETORYADDRESS ? GLOBALDIRCETORYADDRESS : searchDir;
 
-void delete_file_from_directory(char* filename);
+	load_buffer(searchDir);
+
+	if(buffer[0] != 'D'){
+		return 0;
+	}
+
+	while(1){
+
+		int i;
+		for(i=1;i<ALLOCATIONUNITSIZE*8;i++){
+			int name_search_base=i*64;
+			int j;
+			for (j = 0; filename[j] != '\0' && filename[j] == buffer[name_search_base + j]; j++){
+				
+				if (filename[j+1] == '\0' && buffer[name_search_base + j+1] == '\0') {
+					unsigned short addr = (buffer[name_search_base + 62]<<8)+buffer[name_search_base + 63];
+					buffer[name_search_base] = 0;
+					write_buffer(searchDir);
+					return addr;
+				}
+			}
+		}
+
+		if(buffer[1] & 0b00000001){
+			return 0;
+		}
+
+		load_buffer((buffer[2]<<8)+buffer[3]);
+	}
+}
 
 //0 - could not allocate, page size = 4032 bytes
 char* file_read(unsigned short file, unsigned short page){
@@ -166,4 +206,15 @@ void file_write(unsigned short file, char* data, unsigned short len, unsigned sh
 	}
 
 	file_write((small_buffer[2]<<8)+small_buffer[3], data, len, page-1, offset);
+}
+
+void delete_file(unsigned short file){
+	ata_read_sector(ATA_PRIMARY_IO, file, small_buffer);
+	unsigned short next = (small_buffer[2]<<8)+small_buffer[3];
+	small_buffer[0] = 0;
+	ata_write_sector(ATA_PRIMARY_IO, file, small_buffer);
+
+	if(! (small_buffer[1] & 0b00000001)){
+		delete_file(next);
+	}
 }

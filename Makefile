@@ -3,11 +3,14 @@ HEADERS = $(wildcard src/*.h src/drivers/*.h src/cpu/*.h src/lib/*.h)
 OBJ = ${C_SOURCES:.c=.o src/cpu/interrupt.o}
 
 
-CFLAGS = -g
+CFLAGS = 
 
 fresh: clean run
 
-fromdisk: clean os-image.bin mydisk.qcow2
+diskrun:
+	qemu-system-i386 -hda mydisk.raw
+
+cleandisk: clean os-image.bin mydisk.qcow2
 	qemu-img convert -f qcow2 -O raw mydisk.qcow2 mydisk.raw
 	dd if=os-image.bin of=mydisk.raw bs=512 conv=notrunc
 #   qemu-img convert -f raw -O qcow2 mydisk.raw mydisk.qcow2
