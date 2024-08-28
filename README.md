@@ -1,6 +1,15 @@
 # MiniOS
  Minimal bootable binary for x86 architecture
 
+# Currently implemented
+- Interrupt seting
+- Ability to set keyboard events
+- Harddrive driver
+- Filesystem (to be reworked)
+- Screen driver
+- Speaker driver (PC Speaker)
+- Library for memory managment
+
  # My Terrible Filesystem
 Files consist of set size pages linked together
  File page structure:
@@ -16,11 +25,12 @@ Files consist of set size pages linked together
 
 
 # Todo:
-- interface over filesystem functions
+- rework filesystem
 
 # Planned to include
 - basic tree style file system handling
 - minimalistic shell with basic commands
-- possibly a special shell language
 
-Repository started after reading throug https://github.com/cfenollosa/os-tutorial repo
+# Resources used for this project:
+- https://github.com/cfenollosa/os-tutorial
+- https://wiki.osdev.org/

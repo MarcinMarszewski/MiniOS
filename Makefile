@@ -4,41 +4,32 @@ OBJ = ${C_SOURCES:.c=.o src/cpu/interrupt.o}
 
 
 CFLAGS = 
+LINKER = i686-elf-ld
+GCC = i686-elf-gcc
+VM = qemu-system-i386
 
 fresh: clean run
 
-diskrun:
-	qemu-system-i386 -hda mydisk.raw
+run: mydisk.raw
+	${VM} -hda mydisk.raw  -audiodev dsound,id=snd0 -machine pcspk-audiodev=snd0
 
-cleandisk: clean os-image.bin mydisk.qcow2
-	qemu-img convert -f qcow2 -O raw mydisk.qcow2 mydisk.raw
-	dd if=os-image.bin of=mydisk.raw bs=512 conv=notrunc
-#   qemu-img convert -f raw -O qcow2 mydisk.raw mydisk.qcow2
-	qemu-system-i386 -hda mydisk.raw
 
-setdisk:
+mydisk.raw: os-image.bin
 	qemu-img create -f raw mydisk.raw 128M
+	dd if=os-image.bin of=mydisk.raw bs=512 conv=notrunc
 
 os-image.bin: src/boot/bootsect.bin src/kernel.bin
 	cat $^ > os-image.bin
 
 src/kernel.bin: src/boot/kernel_entry.o ${OBJ}
-	i686-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary
-
+	${LINKER} -o $@ -Ttext 0x1000 $^ --oformat binary
 
 kernel.elf: boot/kernel_entry.o ${OBJ}
-	i686-elf-ld -o $@ -Ttext 0x1000 $^ 
-
-mydisk.qcow2:
-	qemu-img create -f qcow2 mydisk.qcow2 128M
-
-run: os-image.bin mydisk.qcow2
-	qemu-system-i386 -hda mydisk.qcow2 -fda os-image.bin
-
+	${LINKER} -o $@ -Ttext 0x1000 $^ 
 
 
 %.o: %.c ${HEADERS}
-	i686-elf-gcc ${CFLAGS} -ffreestanding -c $< -o $@
+	${GCC} ${CFLAGS} -ffreestanding -c $< -o $@
 
 %.o: %.asm
 	nasm $< -f elf -o $@

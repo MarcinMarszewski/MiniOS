@@ -4,6 +4,7 @@
 #include "lib/string.h"
 #include "drivers/harddrive.h"
 #include "lib/filesystem.h"
+#include "drivers/speaker.h"
 
 
 void main(){
@@ -19,19 +20,19 @@ void main(){
 		filesystem_init();
 	}
 
-	add_file_to_directory("test", 'D', GLOBALDIRCETORYADDRESS);
-	unsigned short testdir = find_file_in_dircetory("test", GLOBALDIRCETORYADDRESS);
 
-	add_file_to_directory("test2", 'F', testdir);
-	unsigned short testfile = find_file_in_dircetory("test2", testdir);
-	file_write(testfile, "hello world", 11, 0, 0);
-	file_write(testfile, "hello world", 11, 1, 0);
 
-	unsigned short toDelete = delete_file_from_directory("test2", testdir);
-	write_at_cursor(number_to_string(toDelete));
-	delete_file(toDelete);
+	set_frequency(880);
+	speaker_enable();
 
-	add_file_to_directory("test3", 'F', testdir);
+	int i;
+	for(i=0;i<1000000;i++){
+		asm volatile("nop");
+	}
+	for(;;){
+		asm volatile("nop");
+	}
+	//speaker_disable();
 
 	/* char buffer[512] = "hello world";
 
