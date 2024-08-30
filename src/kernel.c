@@ -5,6 +5,7 @@
 #include "drivers/harddrive.h"
 #include "lib/filesystem.h"
 #include "drivers/speaker.h"
+#include "drivers/timer.h"
 
 
 void main(){
@@ -22,23 +23,19 @@ void main(){
 
 
 
-	set_frequency(880);
-	speaker_enable();
+	set_timer_frequency(1000);
 
-	int i;
-	for(i=0;i<1000000;i++){
-		asm volatile("nop");
-	}
-	for(;;){
-		asm volatile("nop");
-	}
-	//speaker_disable();
-
-	/* char buffer[512] = "hello world";
-
-	char* buf = load_buffer(0);
-	write_at_cursor(number_to_string((unsigned char)buf[0])); */
-
+	register_interrupt_handler(32, timer_irq);
 
 	asm volatile("sti");
+
+
+	char* time = number_to_string(__ticks_elapsed);
+	for (;;)
+	{
+		time = number_to_string(__ticks_elapsed);
+		write_at(time,0,0);
+		memory_free(time);
+	}
+	
 }

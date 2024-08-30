@@ -1,9 +1,10 @@
 #include "speaker.h"
 #include "port.h"
+#include "timer.h"
 
 void set_frequency(unsigned short frequency){
 	unsigned short divisor = PIT_FREQUENCY / frequency;
-	port_byte_out(0x43, 0xB6);
+	port_byte_out(0x43, 0b10110110);
 	port_byte_out(0x42, (unsigned char)divisor);
 	port_byte_out(0x42, (unsigned char)(divisor >> 8));
 }
