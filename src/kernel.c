@@ -15,12 +15,23 @@ void main(){
 
 	__cursor_move = 1;
 
-	char buffer[512];
-	ata_read_sector(ATA_PRIMARY_IO, GLOBALDIRCETORYADDRESS, buffer);
-	if(buffer[0] != 'D'){
-		filesystem_init();
-	}
+	unsigned short unit_one = allocate_unit(1,1);
+	
+	file f;
+	f.firstSegment = unit_one;
+	f.lastSegment = unit_one;
+	f.currentSegment = unit_one;
+	f.currentSegmentOffset = 0;
+	f.fileDescriptor = 0;
+	f.filetype = 1;
 
+	file* new_file = create_file_in_directory(&f, "test", 4, 1);
+	file* new_file2 = create_file_in_directory(&f, "test2", 5, 1);
+
+	write_to_file(new_file, "Hello, World1", 13);
+	write_to_file(new_file2, "Hello, World2", 13);
+
+	write_at(number_to_string(new_file),0,1);
 
 
 	set_timer_frequency(1000);

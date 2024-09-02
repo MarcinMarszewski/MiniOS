@@ -2,22 +2,34 @@
 #define FILESYSTEM_H
 
 #define GLOBALDIRCETORYADDRESS 128
-#define ALLOCATIONUNITSIZE 8
-
 #define MAXDIRECTORYADDRESS 1024*64
 
+typedef struct descriptor{
+	unsigned short segment;
+	unsigned short offset;
+	unsigned short length;
+} descriptor;
 
+typedef struct file{
+	unsigned char filetype;
 
-void filesystem_init();
+	unsigned short firstSegment;
+	unsigned short lastSegment;
+	unsigned short lastSegmentOffset;
 
-unsigned short find_file_in_dircetory(unsigned char* filename, unsigned short searchDir);
-void add_file_to_directory(char* filename, unsigned char filetype, unsigned short dir);
+	unsigned short currentSegment;
+	unsigned short currentSegmentOffset;
 
-char* file_read(unsigned short file, unsigned short page);
+	struct descriptor* fileDescriptor;
+} file;
+//should a file descriptor be its own type? probably
 
-void file_write(unsigned short file, char* data, unsigned short len, unsigned short page, unsigned short offset);
+unsigned short allocate_unit(unsigned short previousSegment, unsigned short nextSegment);
 
-unsigned short delete_file_from_directory(char* filename, unsigned short searchDir);
-void delete_file(unsigned short file);
+void write_to_file(file* f, char* data, unsigned short len);
+
+unsigned short read_from_file(file* f, char* data, unsigned short len);
+
+file* create_file_in_directory(file* dir, char* name, char* name_len, unsigned char filetype);
 
 #endif
