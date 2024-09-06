@@ -85,3 +85,13 @@ void memory_allocation_sizedown(void* address, size_t size){
 		}
 	}
 }
+
+unsigned char memory_compare(void* a, void* b, size_t size){
+	unsigned int i;
+	for(i=0;i<size;i++){
+		if(((char*)a)[i] != ((char*)b)[i]){
+			return 0;
+		}
+	}
+	return 1;
+}

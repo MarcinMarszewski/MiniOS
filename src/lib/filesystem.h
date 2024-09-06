@@ -4,6 +4,7 @@
 #define GLOBALDIRCETORYADDRESS 128
 #define MAXDIRECTORYADDRESS 1024*64
 
+
 typedef struct descriptor{
 	unsigned short segment;
 	unsigned short offset;
@@ -30,6 +31,15 @@ void write_to_file(file* f, char* data, unsigned short len);
 
 unsigned short read_from_file(file* f, char* data, unsigned short len);
 
-file* create_file_in_directory(file* dir, char* name, char* name_len, unsigned char filetype);
+file* create_file_in_directory(file* dir, char* name, unsigned char name_len, unsigned char filetype);
+
+file* open_file_in_directory(file* dir, char* name, unsigned char name_len);
+
+
+void clear_file_descriptor(descriptor* d);
+
+void delete_file_data(file* f);
+
+void remove_file(file* f);
 
 #endif

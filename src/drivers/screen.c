@@ -5,7 +5,7 @@ char __cursor_move = 1;
 
 void write_char_at(char c, int x, int y){
 	char* vmem = VMEM + 2*(y*SCREEN_WIDTH + x);
-	if(vmem > MAX_VMEM_ADDRESS){
+	if(vmem > (char *)MAX_VMEM_ADDRESS){
 		asm volatile("int $5");
 	}
 	vmem[0] = c;

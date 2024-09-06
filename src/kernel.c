@@ -23,7 +23,7 @@ void main(){
 	f.currentSegment = unit_one;
 	f.currentSegmentOffset = 0;
 	f.fileDescriptor = 0;
-	f.filetype = 1;
+	f.filetype = 0;
 
 	file* new_file = create_file_in_directory(&f, "test", 4, 1);
 	file* new_file2 = create_file_in_directory(&f, "test2", 5, 1);
@@ -31,8 +31,22 @@ void main(){
 	write_to_file(new_file, "Hello, World1", 13);
 	write_to_file(new_file2, "Hello, World2", 13);
 
-	write_at(number_to_string(new_file),0,1);
+	
 
+	file* opened_file = open_file_in_directory(&f, "test2", 5);
+
+	int i;
+	for(i = 0; i < 40; i++){
+		write_to_file(opened_file, "Hello, World2", 13);
+	}
+
+	delete_file_data(new_file);
+	clear_file_descriptor(new_file->fileDescriptor);
+	
+
+	file* opened_file2 = open_file_in_directory(&f, "test2", 5);
+
+	write_to_file(opened_file2, "wellno", 6);
 
 	set_timer_frequency(1000);
 

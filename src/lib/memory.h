@@ -17,5 +17,6 @@ void* memory_allocate(size_t size);
 void memory_free(void* address);
 void memory_copy(void* source, void* destination, size_t size);
 void memory_allocation_sizedown(void* address, size_t size);
+unsigned char memory_compare(void* a, void* b, size_t size);
 
 #endif

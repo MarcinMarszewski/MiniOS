@@ -10,22 +10,18 @@
 - Speaker driver (PC Speaker)
 - Library for memory managment
 
- # My Terrible Filesystem
-Files consist of set size pages linked together
- File page structure:
- - 1 byte - filetype [D-directory, F-File]
- - 1 byte - flags [... , isFirstSegment, isLastSegment]
- - 2 bytes- address of next segment
- - 60 bytes left for future metadata
- In case of file rest is space for raw data
- For directories data is stored in the format of:
- - 61 bytes- file name
- - 1 null byte
- - 2 bytes - file address
+ # My (a little bit less) Terrible Filesystem
+Files consist of multiple segments, each segment following the structure:
+
+[rawData:508b] [previousSegmentNumber:2b] [nextSegmentNumber:2b]
+
+In case of direcotires raw data segment contains uninterrupted stream of file descriptors with the structore of:
+
+[totalDescriptorLength:1b] [fileName:variable lenght] [dataBytesInLastSegment:1b] [firstSegmentNumber:2b] [lastSegmentNumber:2] [filetype(1-directory 2-datafile):1b]
 
 
 # Todo:
-- rework filesystem
+- improvements and fixes to filesystem
 
 # Planned to include
 - basic tree style file system handling
