@@ -42,4 +42,6 @@ void delete_file_data(file* f);
 
 void remove_file(file* f);
 
+void update_file_descriptor(file* f);
+
 #endif

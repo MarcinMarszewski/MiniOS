@@ -35,8 +35,6 @@ unsigned short allocate_unit(unsigned short previousSegment, unsigned short next
 // data segment structure:
 // [data:508][previous:2][next:2]
 // 0x0001 - empty pointer
-
-//TODO: updating file descriptor, if descriptor == 0 dont update
 void write_to_file(file* f, char* data, unsigned short len){
 	ata_read_sector(ATA_PRIMARY_IO, f->currentSegment, file_read_buffer);
 	unsigned short i;
@@ -72,6 +70,7 @@ void write_to_file(file* f, char* data, unsigned short len){
 
 	f->currentSegmentOffset = (f->currentSegmentOffset+i)%512;
 	ata_write_sector(ATA_PRIMARY_IO, f->currentSegment, file_read_buffer);
+	update_file_descriptor(f);
 }
 
 // char* data should be allocated by the caller
@@ -103,8 +102,11 @@ unsigned short read_from_file(file* f, char* data, unsigned short len){
 
 #define DESCRIPTOR_SIZE 7
 // filetype: 0 - directory, 1 - file
-// TODO: exclusive file access, max name len check
 file* create_file_in_directory(file* dir, char* name, unsigned char name_len, unsigned char filetype){
+	if(name_len > 255 - DESCRIPTOR_SIZE || name_len == 0){
+		return 0;
+	}
+
 	if(dir->filetype != 0){
 		return 0;
 	}
@@ -220,4 +222,34 @@ void remove_file(file* f){
 	delete_file_data(f);
 	memory_free(f->fileDescriptor);
 	memory_free(f);
+}
+
+void update_file_descriptor(file* f){
+	if(f->fileDescriptor == 0){
+		return;
+	}
+
+	write_at(number_to_string(f->fileDescriptor->segment), 0, 1);
+	write_at(number_to_string(f->fileDescriptor->offset), 0, 2);
+	write_at(number_to_string(f->fileDescriptor->length), 0, 3);
+
+	file tmp_file;
+	tmp_file.currentSegment = f->fileDescriptor->segment;
+	tmp_file.firstSegment = f->fileDescriptor->segment;
+	tmp_file.currentSegmentOffset = f->fileDescriptor->offset;
+	tmp_file.lastSegment = 0;
+	tmp_file.lastSegmentOffset = 0;
+	tmp_file.filetype = 1;
+	tmp_file.fileDescriptor = 0;
+
+	read_from_file(&tmp_file, file_read_buffer, f->fileDescriptor->length-DESCRIPTOR_SIZE+1);
+
+	unsigned char descriptor_buffer[DESCRIPTOR_SIZE-2] = {0};
+	descriptor_buffer[0] = f->lastSegmentOffset;				//last segment offset
+	descriptor_buffer[1] = f->firstSegment>>8;
+	descriptor_buffer[2] = f->firstSegment&0xff;	//first segment
+	descriptor_buffer[3] = f->lastSegment>>8; 	//last segment
+	descriptor_buffer[4] = f->lastSegment&0xff;
+
+	write_to_file(&tmp_file, descriptor_buffer, DESCRIPTOR_SIZE-2);
 }

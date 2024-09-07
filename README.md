@@ -17,7 +17,7 @@ Files consist of multiple segments, each segment following the structure:
 
 In case of direcotires raw data segment contains uninterrupted stream of file descriptors with the structore of:
 
-[totalDescriptorLength:1b] [fileName:variable lenght] [dataBytesInLastSegment:1b] [firstSegmentNumber:2b] [lastSegmentNumber:2] [filetype(1-directory 2-datafile):1b]
+[totalDescriptorLength:1b] [fileName:variable lenght <= 248b] [dataBytesInLastSegment:1b] [firstSegmentNumber:2b] [lastSegmentNumber:2] [filetype(1-directory 2-datafile):1b]
 
 
 # Todo:
