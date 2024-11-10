@@ -12,11 +12,13 @@
 
 extern char __text_color;
 extern char __cursor_move;
+extern char __autoscroll;
 
 void write_at(char* c, int x, int y);
 void write_char_at(char c, int x, int y);
 void write_at_cursor(char* c);
 void get_cursor(int* x, int* y);
 void set_cursor(int x, int y);
+void delete_char();
 
 #endif

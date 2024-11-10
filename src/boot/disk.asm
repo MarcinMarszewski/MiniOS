@@ -1,12 +1,12 @@
 ;load <dh> sectors from drive <dl> into ES:BX
+section .text
+global disk_load
 
 disk_load:
 	pusha
 	push dx
 	mov ah, 0x02 	;'read'
 	mov al, dh 		;n of sectors to read
-	mov cl, 0x02 	;sector
-	mov ch, 0x00	;cylinder
 	mov dh, 0x00	;head
 
 	int 0x13		;disk BIOS int

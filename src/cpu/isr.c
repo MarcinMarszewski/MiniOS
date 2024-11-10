@@ -92,20 +92,20 @@ char *exception_messages[] = {
     "Coprocessor Fault",
     "Alignment Check",
     "Machine Check",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
+    "I20",
+    "I21",
+    "I22",
+    "I23",
+    "I24",
 
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved"
+    "I25",
+    "I26",
+    "I27",
+    "I28",
+    "I29",
+    "I30",
+    "I31",
+    "I32"
 };
 
 void isr_handler(registers_t r) {

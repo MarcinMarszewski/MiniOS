@@ -95,3 +95,10 @@ unsigned char memory_compare(void* a, void* b, size_t size){
 	}
 	return 1;
 }
+
+void memory_set(void* address, unsigned char value, size_t size){
+	unsigned int i;
+	for(i=0;i<size;i++){
+		((char*)address)[i] = value;
+	}
+}

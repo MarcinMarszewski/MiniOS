@@ -24,7 +24,7 @@ os-image.bin: src/boot/bootsect.bin src/kernel.bin
 src/kernel.bin: src/boot/kernel_entry.o ${OBJ}
 	${LINKER} -o $@ -Ttext 0x1000 $^ --oformat binary
 
-kernel.elf: boot/kernel_entry.o ${OBJ}
+kernel.elf: boot/kernel_entry.o src/boot/disk.o ${OBJ}
 	${LINKER} -o $@ -Ttext 0x1000 $^ 
 
 

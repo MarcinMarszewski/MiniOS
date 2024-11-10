@@ -8,9 +8,18 @@ KERNEL_OFFSET equ 0x1000
 	
 
 	mov bx, KERNEL_OFFSET	;load kernel
-	mov dh, 31				;should we calculate it dynamically?
+	mov cl, 0x02 	;sector
+	mov ch, 0x00	;cylinder
+	mov dh, 50				;should we calculate it dynamically?
 	mov dl, [BOOT_DRIVE]
 	call disk_load
+
+	;mov cl, 0x0 	;sector
+	;mov ch, 0x01	;cylinder
+	;mov dh, 18				;should we calculate it dynamically?
+	;mov dl, [BOOT_DRIVE]
+	;call disk_load
+
 
 	;call switch to pm
 	cli
